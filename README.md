@@ -1,132 +1,128 @@
 # Cursor AI IDE Installer for Ubuntu 24.04
 
-This repository provides a simple script to install or update the Cursor AI IDE on Ubuntu 24.04. The script supports both automatic download of the latest AppImage and manual installation from a local file.
-
----
-
-## 📝 Version History
-
-### 1.1 (Current)
-**Added figlet Library for Enhanced Terminal Display:**
-
-To improve user experience, the script now uses the `figlet` library to display banners and ASCII art in the terminal. This makes the installation and update process more visually appealing and engaging.
-
-- The script will automatically check for and install `figlet` if it is not already present on your system.
-- Banners such as "Cursor AI IDE" and a cat ASCII art are shown at the start of the script for a more welcoming interface.
-
-**Example output:**
-```
-  / ____/_  ________________  _____   /   |  /  _/  /  _/ __ \/ ____/
- / /   / / / / ___/ ___/ __ \/ ___/  / /| |  / /    / // / / / __/   
-/ /___/ /_/ / /  (__  ) /_/ / /     / ___ |_/ /   _/ // /_/ / /___   
-\____/\__,_/_/  /____/\____/_/     /_/  |_/___/  /___/_____/_____/   
-                                                                     
-For Ubuntu 24.04 LTS
--------------------------------------------------                                                                     
-  /\_/\
- ( o.o )
-  > ^ <
--------------------------------------------------
-1. Install Cursor
-2. Update Cursor
-Note: If the menu reappears after choosing 1 or 2, please check the notification above for any issues.
--------------------------------------------------
-```
-This helps users quickly recognize the script's purpose and provides a more pleasant terminal experience.
-
-### 1.0 
-- Initial release for Ubuntu 24.04
-- Automatic download of the latest Cursor AppImage from the official website
-- Option to specify a local AppImage file path
-- Icon selection during installation
-- Easy update process with the same options as installation
-- Clean user prompts and error handling
-
----
-
-## Prerequisites
-- Ubuntu 24.04 (or compatible)
-- Internet connection
-- `sudo` privileges
-- `curl`, `wget`, and `jq` (the script will attempt to install them if missing)
+A simple and user-friendly script to install, update, and manage the Cursor AI IDE on Ubuntu 24.04. The script supports automatic download of the latest AppImage and provides easy icon customization.
 
 ---
 
 ## ✨ Features
-- **Automatic Download:** Fetch and install the latest Cursor AppImage with a single command.
-- **Manual Path Option:** Use a previously downloaded AppImage if you prefer.
-- **Icon Selection:** Choose your preferred icon during setup.
-- **Easy Update:** Update Cursor to the latest version using the same script.
+
+- **🚀 Automatic Installation**: Download and install the latest Cursor AppImage with a single command
+- **🔄 Easy Updates**: Update Cursor to the latest version using the same script
+- **🎨 Icon Customization**: Choose between light and dark theme icons during installation
+- **🔄 Icon Restoration**: Change your icon selection after installation if needed
+- **📦 Dependency Management**: Automatically installs required tools (`curl`, `wget`, `jq`, `figlet`)
+- **🖥️ Desktop Integration**: Creates proper desktop entries for easy launching
+- **🛡️ Safety Checks**: Validates Ubuntu version and provides comprehensive error handling
 
 ---
 
 ## 🎨 Available Icons
+
 - <img src="images/cursor-icon.png" alt="Cursor Icon" width="24"/> `cursor-icon.png` – Standard Cursor logo with blue background
 - <img src="images/cursor-black-icon.png" alt="Cursor Black Icon" width="24"/> `cursor-black-icon.png` – Cursor logo with dark/black background
 
-You will be prompted to choose one of these icons during installation.
-
 ---
 
-## 🚀 Installation & Update Steps
+## 🚀 Quick Start
 
-1. **Download the Script**
-    - Clone this repository or download the `manage_cursor.sh` file.
-    - Make the script executable:
-      ```zsh
-      chmod +x manage_cursor.sh
-      ```
+### Prerequisites
+- Ubuntu 24.04 (or compatible)
+- Internet connection
+- `sudo` privileges
 
-2. **Run the Script**
-    - Start the script:
-      ```zsh
-      ./manage_cursor.sh
-      ```
-    - Follow the menu prompts:
-      - Choose '1' to **Install Cursor**
-      - Choose '2' to **Update Cursor**
-    - You will be asked how to provide the Cursor AppImage:
-      - **Option 1 (Recommended):** Auto-download the latest version
-      - **Option 2:** Specify the local file path
-    - You will also be prompted to enter the icon filename (e.g., `cursor-icon.png` or `cursor-black-icon.png`).
+### Installation
 
-3. **Launch Cursor**
-    - After installation, find "Cursor AI IDE" in your application menu.
-    - Or launch from the terminal:
-      ```zsh
-      /opt/Cursor/AppRun --no-sandbox
-      ```
+1. **Download and make executable:**
+   ```bash
+   chmod +x manage_cursor.sh
+   ```
+
+2. **Run the script:**
+   ```bash
+   ./manage_cursor.sh
+   ```
+
+3. **Choose your option:**
+   - `1` - **Install Cursor** (first-time installation)
+   - `2` - **Update Cursor** (update existing installation)
+   - `3` - **Restore Icons** (change icon after installation)
+
+4. **Follow the prompts:**
+   - Choose auto-download (recommended) or specify local file path
+   - Select your preferred icon theme
+   - Wait for installation to complete
+
+5. **Launch Cursor:**
+   - Find "Cursor AI IDE" in your application menu
+   - Or run: `/opt/Cursor/AppRun --no-sandbox`
 
 ---
 
 ## 🛠️ What the Script Does
-- Installs or updates Cursor AI IDE
-- Checks for and installs required tools (`curl`, `wget`, `jq`)
-- Downloads and extracts the Cursor AppImage to `/opt/Cursor/`
-- Downloads your chosen icon to `/opt/Cursor/`
-- Creates a desktop entry for easy launching
+
+The script handles the complete installation process:
+
+1. **System Validation**: Checks Ubuntu version compatibility
+2. **Dependency Installation**: Installs required tools automatically
+3. **AppImage Processing**: Downloads and extracts the Cursor AppImage
+4. **System Integration**: Creates desktop entries and sets proper permissions
+5. **Icon Management**: Downloads and applies your chosen icon theme
+
+---
+
+## 🎨 Icon Management
+
+### During Installation
+You'll be prompted to choose an icon filename:
+- `cursor-icon.png` for light theme
+- `cursor-black-icon.png` for dark theme
+
+### After Installation
+Use option `3` (Restore Icons) to change your icon selection:
+1. Run the script: `./manage_cursor.sh`
+2. Choose option `3`
+3. Enter the desired icon filename
+4. The script will download and apply the new icon automatically
 
 ---
 
 ## ❌ Uninstallation
-To uninstall Cursor:
-1. Remove the application files:
-    ```zsh
-    sudo rm -rf /opt/Cursor
-    ```
-2. Remove the desktop entry:
-    ```zsh
-    sudo rm -f /usr/share/applications/cursor.desktop
-    ```
+
+To completely remove Cursor:
+
+```bash
+# Remove application files
+sudo rm -rf /opt/Cursor
+
+# Remove desktop entry
+sudo rm -f /usr/share/applications/cursor.desktop
+```
 
 ---
 
 ## 🧩 Troubleshooting
-- Ensure you have `sudo` privileges and an active internet connection.
-- Make sure the AppImage file path you provide is correct and accessible.
-- Confirm the icon filename exists in the `images` directory of this repository.
-- If Cursor fails to start, try running it from the terminal to see any error messages.
-- Check script permissions (`chmod +x manage_cursor.sh`).
+
+**Common Issues:**
+- **Wrong Ubuntu version**: Script is designed for Ubuntu 24.04 only
+- **Permission denied**: Ensure you have `sudo` privileges
+- **Download fails**: Check your internet connection
+- **Icon not showing**: Try the "Restore Icons" option
+- **App won't start**: Run from terminal to see error messages
+
+**Script Permissions:**
+```bash
+chmod +x manage_cursor.sh
+```
+
+---
+
+## 📝 Notes
+
+- The script automatically handles all dependencies
+- Icons are downloaded from this repository's `images` directory
+- Desktop entries are created with proper permissions
+- The `--no-sandbox` flag is used for compatibility
+- All temporary files are cleaned up automatically
 
 ---
 

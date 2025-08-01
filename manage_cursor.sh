@@ -6,7 +6,7 @@ if [ "$UBUNTU_VERSION" != "24.04" ]; then
     echo "-------------------------------------"
     echo "==============================="
     echo "❌ This script is for Ubuntu 24.04 only."
-    echo "==============================="    
+    echo "==============================="
     echo "You are running Ubuntu $UBUNTU_VERSION."
     echo "This script is for Ubuntu 24.04 only."
     echo "Please use the installer for Ubuntu 22.04:"
@@ -45,7 +45,7 @@ print_info() {
 # --- Dependency Management ---
 install_dependencies() {
     local deps=("curl" "jq" "wget" "figlet")
-    
+
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
             echo "📦 $dep is not installed. Installing..."
@@ -83,13 +83,13 @@ download_latest_cursor_appimage() {
 get_appimage_path() {
     local operation="$1"  # "install" or "update"
     local action_text=""
-    
+
     if [ "$operation" = "update" ]; then
         action_text="new Cursor AppImage"
     else
         action_text="Cursor AppImage"
     fi
-    
+
     echo "How do you want to provide the $action_text?" >&2
     echo "📥 1. Automatically download the latest version (recommended)" >&2
     echo "📁 2. Specify local file path manually" >&2
@@ -97,7 +97,7 @@ get_appimage_path() {
     read -rp "Choose 1 or 2: " appimage_option >&2
 
     local cursor_download_path=""
-    
+
     if [ "$appimage_option" = "1" ]; then
         echo "⏳ Downloading the latest Cursor AppImage, please wait..." >&2
         cursor_download_path=$(download_latest_cursor_appimage 2>/dev/null | tail -n 1)
@@ -123,7 +123,7 @@ get_appimage_path() {
             read -rp "📂 Enter Cursor AppImage file path: " cursor_download_path >&2
         fi
     fi
-    
+
     # Return only the path
     echo "$cursor_download_path"
 }
@@ -132,7 +132,7 @@ get_appimage_path() {
 process_appimage() {
     local source_path="$1"
     local operation="$2"  # "install" or "update"
-    
+
     if [ ! -f "$source_path" ]; then
         print_error "File does not exist at: $source_path"
         exit 1
@@ -201,11 +201,11 @@ installCursor() {
 
     figlet -f slant "Install Cursor"
     echo "💿 Installing Cursor AI IDE on Ubuntu..."
-    
+
     install_dependencies
-    
+
     local cursor_download_path=$(get_appimage_path "install")
-    
+
     process_appimage "$cursor_download_path" "install"
 
     # ── Icon & desktop entry ───────────────────────────────────────────────
@@ -245,14 +245,68 @@ updateCursor() {
 
     figlet -f slant "Update Cursor"
     echo "🆙 Updating Cursor AI IDE..."
-    
+
     install_dependencies
-    
+
     local cursor_download_path=$(get_appimage_path "update")
-    
+
     process_appimage "$cursor_download_path" "update"
 
     print_success "Cursor AI IDE update complete!"
+}
+
+# --- Restore Icons Function ---
+restoreIcons() {
+    if [ ! -d "$CURSOR_EXTRACT_DIR" ]; then
+        print_error "Cursor is not installed. Please run the installer first."
+        exec "$0"
+    fi
+
+    figlet -f slant "Restore Icons"
+    echo "🎨 Restoring Cursor AI IDE icons..."
+
+    echo "Available icons:"
+    echo "1. cursor-icon.png - Standard Cursor logo with blue background"
+    echo "2. cursor-black-icon.png - Cursor logo with dark/black background"
+    echo "------------------------"
+    read -rp "Enter icon filename (e.g., cursor-icon.png): " icon_name_from_github
+
+    if [ -z "$icon_name_from_github" ]; then
+        print_error "No icon filename provided. Exiting."
+        exit 1
+    fi
+
+    local icon_download_url="https://raw.githubusercontent.com/hieutt192/Cursor-ubuntu/main/images/$icon_name_from_github"
+    echo "🎨 Downloading icon to $ICON_PATH..."
+
+    # Download the new icon
+    if sudo curl -L "$icon_download_url" -o "$ICON_PATH"; then
+        echo "✅ Icon downloaded successfully!"
+
+        # Update the desktop entry with the new icon
+        echo "🖥️ Updating desktop entry with new icon..."
+        sudo tee "$DESKTOP_ENTRY_PATH" >/dev/null <<EOL
+[Desktop Entry]
+Name=Cursor AI IDE
+Exec=${EXECUTABLE_PATH} --no-sandbox
+Icon=${ICON_PATH}
+Type=Application
+Categories=Development;
+EOL
+
+        # Set proper permissions for .desktop file
+        sudo chmod 644 "$DESKTOP_ENTRY_PATH"
+        if [ $? -eq 0 ]; then
+            echo "✅ Desktop entry updated with proper permissions."
+            print_success "Icon restoration complete!"
+        else
+            print_error "Failed to set desktop entry permissions."
+            exit 1
+        fi
+    else
+        print_error "Failed to download the icon. Please check the filename and try again."
+        exit 1
+    fi
 }
 
 # --- Main Menu ---
@@ -267,10 +321,11 @@ echo "  > ^ <"
 echo "------------------------"
 echo "💿 1. Install Cursor"
 echo "🆙 2. Update Cursor"
-echo "Note: If the menu reappears after choosing 1 or 2, check any error message above."
+echo "🎨 3. Restore Icons"
+echo "Note: If the menu reappears after choosing 1, 2, or 3, check any error message above."
 echo "------------------------"
 
-read -rp "Please choose an option (1 or 2): " choice
+read -rp "Please choose an option (1, 2, or 3): " choice
 
 case $choice in
     1)
@@ -278,6 +333,9 @@ case $choice in
         ;;
     2)
         updateCursor
+        ;;
+    3)
+        restoreIcons
         ;;
     *)
         print_error "Invalid option. Exiting."
